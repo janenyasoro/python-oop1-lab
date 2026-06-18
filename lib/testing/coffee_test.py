@@ -1,41 +1,36 @@
-#!/usr/bin/env python3
-
-from lib.coffee import Coffee
-
 import io
 import sys
+from coffee import Coffee
 
 class TestCoffee:
     '''Coffee in coffee.py'''
 
     def test_has_size_and_price(self):
-        '''has the size and status passed to __init__, and values can be set to new instance.'''
-        black = Coffee(size = "Large", price = 1.50)
-        assert(black.size == "Large")
-        assert(black.price == 1.50)
+        '''has the size and price passed into __init__, and values can be set to new instance.'''
+        coffee = Coffee("Large", 4.50)
+        assert(coffee.size == "Large")
+        assert(coffee.price == 4.50)
 
-    def test_requires_specific_size(self):
-        '''prints "size must be Small, Medium, or Large" if size is not an one of those options.'''
-        latte = Coffee(size = "Large", price = 2.50)
+    def test_requires_valid_size(self):
+        '''prints "size must be Small, Medium, or Large" if size is not Small, Medium, or Large.'''
+        coffee = Coffee("Medium", 3.75)
         captured_out = io.StringIO()
         sys.stdout = captured_out
-        latte.size = "not an size"
+        coffee.size = "Extra Large"
         sys.stdout = sys.__stdout__
         assert captured_out.getvalue() == "size must be Small, Medium, or Large\n"
 
     def test_can_tip(self):
-        '''says that the shoe has been repaired.'''
-        americano = Coffee(size = "Large", price = 3.50)
+        '''increases price by 1 when method tip() is called'''
+        coffee = Coffee("Small", 3.00)
+        coffee.tip()
+        assert(coffee.price == 4.00)
+
+    def test_tip_output(self):
+        '''outputs "This coffee is great, here's a tip!" when method tip() is called'''
+        coffee = Coffee("Large", 5.00)
         captured_out = io.StringIO()
         sys.stdout = captured_out
-        americano.tip()
+        coffee.tip()
         sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "This coffee is great, here’s a tip!\n")
-    
-    def test_tip_adds_to_price(self):
-        '''adds 1 to price of coffee'''
-        americano = Coffee(size = "Large", price = 3.50)
-        americano.tip()
-        assert(americano.price == 4.50)
-        
-        
+        assert(captured_out.getvalue() == "This coffee is great, here's a tip!\n")
